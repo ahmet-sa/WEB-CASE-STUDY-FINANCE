@@ -1,42 +1,77 @@
 // LoginPage.tsx
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axiosInstance from '../axios.config'; 
 
-import React, { useState } from 'react';
+interface FormData {
+  email: string;
+  password: string;
+}
 
-function LoginPage() {
-  const [formData, setFormData] = useState({
+const LoginPage: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      console.log('Form gönderildi:', formData);
-      // Burada giriş formunu gönderme işlemini gerçekleştirebilirsiniz
+      setLoading(true);
+      setError(null);
+      console.log('Form submitted:', formData);
+      const response = await axiosInstance.post('/auth/login', formData);
+      console.log('Response:', response.data);
     } catch (error) {
-      console.error('Giriş hatası:', error);
+      setError('An error occurred');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-8 max-w-md mx-auto bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-semibold mb-4">Giriş Sayfası</h1>
+      <h1 className="text-2xl font-semibold mb-4">Login Page</h1>
       <form onSubmit={handleSubmit}>
         <label className="block mb-2">
-          E-posta:
-          <input className="form-input mt-1 block w-full" type="email" name="email" value={formData.email} onChange={handleChange} required />
+          Email:
+          <input
+            className="form-input mt-1 block w-full"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
         </label>
         <label className="block mb-2">
-          Parola:
-          <input className="form-input mt-1 block w-full" type="password" name="password" value={formData.password} onChange={handleChange} required />
+          Password:
+          <input
+            className="form-input mt-1 block w-full"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
         </label>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4" type="submit">Giriş Yap</button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4" type="submit" disabled={loading}>
+          {loading ? 'Loading...' : 'Login'}
+        </button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
+      <p className="mt-4 text-sm text-gray-600">
+        Don't have an account? <a href="/register" className="text-blue-500">Register now</a>
+      </p>
     </div>
   );
 }
