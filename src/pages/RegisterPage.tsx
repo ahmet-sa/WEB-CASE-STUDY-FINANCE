@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import axiosInstance from '../axios.config'; 
+import axiosInstance from '../axios.config';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   name: string;
@@ -15,6 +16,7 @@ const RegisterPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,19 +25,31 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validatePassword(formData.password)) {
+      setError('Password must be 6-12 characters long and contain only letters and numbers.');
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
       console.log('Form submitted:', formData);
+
       const response = await axiosInstance.post('/auth/register', formData);
       console.log('Response:', response.data);
       // Handle successful registration
-    } catch (err) {
+      navigate('/login'); // Navigate to the login page after successful registration
+
+    } catch (error: any) {
       setError('An error occurred');
-      console.error('Registration error:', err);
+      console.error('Registration error:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const validatePassword = (password: string): boolean => {
+    const passwordPattern = /^[a-zA-Z0-9]{6,12}$/;
+    return passwordPattern.test(password);
   };
 
   return (

@@ -4,7 +4,12 @@
   padding: 2rem;
   text-align: center;
 }
-
+.app-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+}
 .logo {
   height: 6em;
   padding: 1.5em;
