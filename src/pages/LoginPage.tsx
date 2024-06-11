@@ -32,9 +32,8 @@ const LoginPage: React.FC = () => {
       console.log('Form submitted:', formData);
       const response = await axiosInstance.post('/auth/login', formData);
       console.log('Response:', response.data);
-      dispatch(login(formData.email)); 
-      navigate('/dashboard'); 
-
+      dispatch(login()); // Update: Dispatch login without payload
+      navigate('/dashboard'); // Update: Navigate after login
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.data === "Invalid email or password") {
         setError('Invalid email or password');
@@ -48,7 +47,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="w-full flex items-center justify-center h-screen">
       <div className="p-8 max-w-md mx-auto bg-white rounded-lg shadow-lg">
         <h1 className="text-2xl font-semibold mb-4">Login Page</h1>
         <form onSubmit={handleSubmit}>
