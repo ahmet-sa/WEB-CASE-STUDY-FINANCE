@@ -1,7 +1,7 @@
 # Personal Debt Tracking Application
 you can clone project https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE.git
 after download you can install library
-# set up
+# Set up
 you can run in terminal 
 npm install vite --save-dev
 this code install library after this code 
@@ -38,6 +38,15 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+- Project Photos
+  ## log in
+  ![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/30b142e7-1b5e-4806-a018-7a5369a83374)
+
+  ## registerPage
+
+  ![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/b453106c-4265-4ae5-8788-a588dcf62d95)
+
 
 
 
