@@ -5,7 +5,7 @@ import { RootState } from '../store/store';
 import { fetchDebts, autoUpdateTotalPaid } from '../store/debtsSlice';
 import { AppDispatch } from '../store/store'; 
 
-const COLORS = ['#0088FE', '#00C49F'];
+const COLORS = ['#4CAF50', '#FF9800'];
 
 const PieChartComponent = ({ data }: { data: any[] }) => {
   return (
@@ -62,36 +62,46 @@ const DashboardPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start', margin: '20px' }}>
       <div style={{ flex: 1, maxWidth: '50%', paddingRight: '20px' }}>
-        <h2>Debts Overview</h2>
+        <h2 className='text-primary text-center'>Debts Overview</h2>
         {loading ? (
           <div>Loading...</div>
         ) : (
           <>
             {debts.length > 0 && <PieChartComponent data={pieChartData} />}
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <h3>Total Debt: ${totalDebt.toFixed(2)}</h3>
-              <h3>Paid Debt: ${totalPaid.toFixed(2)}</h3>
-              <h3>Remaining Debt: ${remainingDebt.toFixed(2)}</h3>
+              <h4 className='text-primary' >Total Debt: ${totalDebt.toFixed(2)}</h4>
+              <h4 className='text-primary' >Paid Debt: ${totalPaid.toFixed(2)}</h4>
+              <h4 className='text-primary' >Remaining Debt: ${remainingDebt.toFixed(2)}</h4>
             </div>
           </>
         )}
       </div>
-      <div style={{ flex: 1, maxWidth: '50%', paddingLeft: '20px' }}>
-        <h3>Upcoming Payments</h3>
+      <div className='w-full' style={{ flex: 1, paddingLeft: '20px' }}>
+        <h2 className='text-secondary text-center' >Upcoming Payments</h2>
         {upcomingPayments.length === 0 ? (
-          <div>No upcoming payments.</div>
+          <div className='text-secondary' >No upcoming payments.</div>
         ) : (
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {upcomingPayments.map((payment) => {
-              const debt = debts.find((d) => d.id === payment.debtId);
-              console.log(debt)
-              return (
-                <li key={payment.id} style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
-                  {debt?.debtName || `Debt ID: ${payment.debtId}`} - Amount: ${payment.paymentAmount.toFixed(2)} - Due Date: {new Date(payment.paymentDate).toLocaleDateString()}
-                </li>
-              );
-            })}
-          </ul>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Debt</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {upcomingPayments.map((payment) => {
+                const debt = debts.find((d) => d.id === payment.debtId);
+                return (
+                  <tr key={payment.id}>
+                    <td>{debt?.debtName || `Debt ID: ${payment.debtId}`}</td>
+                    <td>${payment.paymentAmount.toFixed(2)}</td>
+                    <td>{new Date(payment.paymentDate).toLocaleDateString()}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
