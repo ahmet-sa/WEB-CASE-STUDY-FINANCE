@@ -1,112 +1,98 @@
 import React, { useState } from 'react';
 import { DialogTitle, DialogContent, DialogActions, TextField, Button } from '@material-ui/core';
-import axiosInstance from '../axios.config';
+import axiosInstance from '../../axios.config';
+import { Debt, FormErrors, PaymentPlan } from '../../types';
+import { initialDebtState, initialErrorsState } from '../../constants';
 
 const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit }) => {
-  const initialDebtState = {
-    debtName: '',
-    lenderName: '',
-    debtAmount: '',
-    interestRate: '',
-    amount: '',
-    paymentStart: '2024-06-11',
-    installment: '',
-    description: '',
-    paymentPlan: [{ paymentDate: '2024-06-11', paymentAmount: '' }],
-  };
-
-  const initialErrorsState = {
-    debtName: '',
-    lenderName: '',
-    debtAmount: '',
-    interestRate: '',
-    amount: '',
-    paymentStart: '',
-    installment: '',
-    description: '',
-    paymentPlan: [{ paymentDate: '', paymentAmount: '' }],
-  };
-
-  const [newDebt, setNewDebt] = useState(initialDebtState);
-  const [formErrors, setFormErrors] = useState(initialErrorsState);
-
+  const [newDebt, setNewDebt] = useState<Debt>(initialDebtState);
+  const [formErrors, setFormErrors] = useState<FormErrors>(initialErrorsState);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const parsedValue = parseFloat(value);
+
     if (name.startsWith('paymentPlan')) {
       const [_, index, field] = name.split('.');
       const updatedPaymentPlan = newDebt.paymentPlan.map((plan, i) =>
         i === parseInt(index) ? { ...plan, [field]: value } : plan
       );
       const updatedPaymentPlanErrors = formErrors.paymentPlan.map((plan, i) =>
-        i === parseInt(index) ? { ...plan, [field]: value ? '' : 'Required' } : plan
+        i === parseInt(index) ? { ...plan, [field]: value ? '' : 'Gerekli' } : plan
       );
       setNewDebt({ ...newDebt, paymentPlan: updatedPaymentPlan });
       setFormErrors({ ...formErrors, paymentPlan: updatedPaymentPlanErrors });
     } else {
-      if (name === 'debtAmount' || name === 'installment') {
-        const newAmount = calculateAmount(newDebt.debtAmount, newDebt.interestRate, newDebt.installment, value, name);
-        setNewDebt({ ...newDebt, [name]: value, amount: newAmount });
-      } else {
-        setNewDebt({ ...newDebt, [name]: value });
+      let updatedDebt = { ...newDebt, [name]: name === 'debtAmount' || name === 'installment' || name === 'interestRate' ? parsedValue : value };
+      
+      if (name === 'debtAmount' || name === 'installment' || name === 'interestRate') {
+        updatedDebt.amount = calculateAmount(
+          updatedDebt.debtAmount,
+          updatedDebt.interestRate,
+          updatedDebt.installment
+        );
       }
-      setFormErrors({ ...formErrors, [name]: value ? '' : 'Required' });
+      setNewDebt(updatedDebt);
+      setFormErrors({ ...formErrors, [name]: value ? '' : 'Gerekli' });
     }
   };
 
   const calculateAmount = (debtAmount: number, interestRate: number, installment: number) => {
-    const monthlyInterestRate = interestRate / 100; 
-    const totalPayment = debtAmount * Math.pow(1 + monthlyInterestRate, installment); 
-    return totalPayment.toFixed(2); 
-};
+    if (debtAmount <= 0 || interestRate <= 0 || installment <= 0) {
+      return 0;
+    }
+    const monthlyInterestRate = interestRate / 100;
+    const totalPayment = debtAmount * Math.pow(1 + monthlyInterestRate, installment);
+    return parseFloat(totalPayment.toFixed(2));
+  };
 
-const result = calculateAmount(20000, 10, 5);
-console.log(result); // Output: 32210.20
+  const generatePaymentPlan = () => {
+    const { amount, installment, paymentStart } = newDebt;
+    if (installment <= 0 || amount <= 0) {
+      return [];
+    }
+    const installmentAmount = parseFloat((amount / installment).toFixed(2));
+    const paymentPlan: PaymentPlan[] = [];
+    const startDate = new Date(paymentStart);
 
+    for (let i = 0; i < installment; i++) {
+      const paymentDate = new Date(startDate);
+      paymentDate.setMonth(paymentDate.getMonth() + i);
+      paymentPlan.push({
+        paymentDate: paymentDate.toISOString().split('T')[0],
+        paymentAmount: installmentAmount,
+      });
+    }
+    setNewDebt({ ...newDebt, paymentPlan });
+  };
 
-
-  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
       try {
         const response = await axiosInstance.post('/finance/debt', newDebt);
-        
         onSubmit(response.data);
-        
         setNewDebt(initialDebtState);
         setFormErrors(initialErrorsState);
-        
       } catch (error) {
-        console.error('Error adding debt:', error);
+        console.error('Borç eklenirken hata oluştu:', error);
       }
     }
   };
 
   const isFormValid = () => {
+    // lenderName ve description zorunlu değil; diğer alanlar zorunlu
     for (const key in newDebt) {
-      if (newDebt[key] === '' || (typeof newDebt[key] === 'object' && !newDebt[key].length)) {
-        return false;
-      }
-    }
-    for (const plan of newDebt.paymentPlan) {
-      if (!plan.paymentDate || !plan.paymentAmount) {
+      if (
+        key !== 'lenderName' &&
+        key !== 'description' &&
+        (newDebt[key as keyof Debt] === '' ||
+          (typeof newDebt[key as keyof Debt] === 'object' && !newDebt[key as keyof Debt].length))
+      ) {
         return false;
       }
     }
     return true;
   };
-
-  const addPaymentPlanField = () => {
-    setNewDebt({
-      ...newDebt,
-      paymentPlan: [...newDebt.paymentPlan, { paymentDate: '', paymentAmount: '' }],
-    });
-    setFormErrors({
-      ...formErrors,
-      paymentPlan: [...formErrors.paymentPlan, { paymentDate: '', paymentAmount: '' }],
-    });
-  };
-
   return (
     <form onSubmit={handleSubmit}>
       <DialogTitle>Add New Debt</DialogTitle>
@@ -143,8 +129,6 @@ console.log(result); // Output: 32210.20
           fullWidth
           margin="dense"
           error={!!formErrors.debtAmount}
-          helperText
-          ={formErrors.debtAmount}
           helperText={formErrors.debtAmount}
         />
         <TextField
@@ -173,16 +157,14 @@ console.log(result); // Output: 32210.20
         />
         <TextField
           name="amount"
-          label="Amount"
+          label="Total Amount"
           type="number"
           value={newDebt.amount}
-          onChange={handleChange}
-          required
+          disabled
           fullWidth
           margin="dense"
           error={!!formErrors.amount}
           helperText={formErrors.amount}
-          disabled
         />
         <TextField
           name="paymentStart"
@@ -204,12 +186,12 @@ console.log(result); // Output: 32210.20
           label="Description"
           value={newDebt.description}
           onChange={handleChange}
-          required
           fullWidth
           margin="dense"
           error={!!formErrors.description}
           helperText={formErrors.description}
         />
+
         {newDebt.paymentPlan.map((plan, index) => (
           <div key={index}>
             <TextField
@@ -224,8 +206,8 @@ console.log(result); // Output: 32210.20
               InputLabelProps={{
                 shrink: true,
               }}
-              error={!!formErrors.paymentPlan[index].paymentDate}
-              helperText={formErrors.paymentPlan[index].paymentDate}
+              error={!!formErrors.paymentPlan[index]?.paymentDate}
+              helperText={formErrors.paymentPlan[index]?.paymentDate}
             />
             <TextField
               name={`paymentPlan.${index}.paymentAmount`}
@@ -236,21 +218,22 @@ console.log(result); // Output: 32210.20
               required
               fullWidth
               margin="dense"
-              error={!!formErrors.paymentPlan[index].paymentAmount}
-              helperText={formErrors.paymentPlan[index].paymentAmount}
+              error={!!formErrors.paymentPlan[index]?.paymentAmount}
+              helperText={formErrors.paymentPlan[index]?.paymentAmount}
             />
           </div>
         ))}
-        <Button onClick={addPaymentPlanField} color="primary">
-          Add Payment Plan
+        <Button onClick={generatePaymentPlan} color="primary">
+          Ödeme Planı Oluştur
         </Button>
       </DialogContent>
       <DialogActions>
-        <Button type="submit" color="primary" disabled={!isFormValid()}>Add</Button>
+        <Button type="submit" color="primary" disabled={!isFormValid()}>
+          Add
+        </Button>
       </DialogActions>
     </form>
   );
 };
 
 export default AddDebtForm;
-
