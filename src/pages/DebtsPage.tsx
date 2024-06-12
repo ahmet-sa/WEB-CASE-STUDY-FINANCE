@@ -176,6 +176,7 @@ const DebtsPage: React.FC = () => {
         open={openDeleteDialog}  
         onClose={handleCloseDeleteDialog} 
         onConfirm={handleConfirmDelete} 
+        loading={loading} 
       />
     </div>
   );

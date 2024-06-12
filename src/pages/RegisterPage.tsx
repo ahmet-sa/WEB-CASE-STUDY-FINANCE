@@ -53,53 +53,58 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-semibold mb-4">Register Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label className="block mb-2">
-          Name:
-          <input
-            className="form-input mt-1 block w-full"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </label>
-        <label className="block mb-2">
-          Email:
-          <input
-            className="form-input mt-1 block w-full"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </label>
-        <label className="block mb-2">
-          Password:
-          <input
-            className="form-input mt-1 block w-full"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
-        </label>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4" type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Register'}
-        </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </form>
-      <p className="mt-4 text-sm text-gray-600">
-        Already have an account? <a href="/login" className="text-blue-500">Login here</a>
-      </p>
+    <div className="w-full flex items-center justify-center h-screen bg-background">
+      <div className="p-8 max-w-md mx-auto bg-white rounded-lg shadow-lg">
+        <h1 className="text-2xl font-semibold mb-4 text-primary text-center">Register Page</h1>
+        <form onSubmit={handleSubmit}>
+          <label className="block mb-2 text-primary">
+            Name:
+            <input
+              className="form-input text-black rounded mt-1 border-1 h-6 border-primary-light block w-full"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+          </label>
+          <label className="block mb-2 text-primary">
+            Email:
+            <input
+              className="form-input text-black rounded mt-1 border-1 h-6 border-primary-light block w-full"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+          </label>
+          <label className="block mb-2 text-primary">
+            Password:
+            <input
+              className="form-input mt-1 block w-full rounded border-1 h-6 border-primary-light  "
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+          </label>
+          <div className='w-full flex justify-center items-center'>
+          <button className="#F5F5F5  text-white w-20 bg-primary align-center  items-center  px-4 py-2 rounded-md mt-4" type="submit" disabled={loading}>
+            {loading ? 'Loading...' : 'Register'}
+          </button>
+          </div>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </form>
+        <p className="mt-4 text-sm text-gray-600">
+          Already have an account? <a href="/login" className="text-primary-light hover:text-primary">Login here</a>
+        </p>
+        
+      </div>
     </div>
   );
 }

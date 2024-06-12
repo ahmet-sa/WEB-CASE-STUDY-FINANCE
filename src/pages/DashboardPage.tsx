@@ -67,7 +67,7 @@ const DashboardPage: React.FC = () => {
           <div>Loading...</div>
         ) : (
           <>
-            <PieChartComponent data={pieChartData} />
+            {debts.length > 0 && <PieChartComponent data={pieChartData} />}
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
               <h3>Total Debt: ${totalDebt.toFixed(2)}</h3>
               <h3>Paid Debt: ${totalPaid.toFixed(2)}</h3>

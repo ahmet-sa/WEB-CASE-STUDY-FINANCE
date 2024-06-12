@@ -99,25 +99,28 @@ const PaymentPlanPage: React.FC = () => {
 
   return (
     <div className="p-4">
-      <FormControl fullWidth>
-        <Select
-          value={selectedDebt || ''}
-          onChange={handleDebtChange}
-          displayEmpty
-          fullWidth
-          className="mb-4"
-        >
-          <MenuItem value="" disabled>
-            Select Debt
-          </MenuItem>
-          {debts.map((debt) => (
-            <MenuItem key={debt.id} value={debt.id}>
-              {debt.debtName}
+         {debts.length > 0 ? (
+        <FormControl fullWidth>
+          <Select
+            value={selectedDebt || ''}
+            onChange={handleDebtChange}
+            displayEmpty
+            fullWidth
+            className="mb-4"
+          >
+            <MenuItem value="" disabled>
+              Select Debt
             </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
+            {debts.map((debt) => (
+              <MenuItem key={debt.id} value={debt.id}>
+                {debt.debtName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ) : (
+        <div>No debts available. Please add a debt.</div>
+      )}
       {selectedDebt && (
         <Table>
           <TableHead>
@@ -148,7 +151,7 @@ const PaymentPlanPage: React.FC = () => {
             ))}
           </TableBody>
         </Table>
-      )}
+      )} 
 
       <Dialog open={isDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Edit Payment</DialogTitle>

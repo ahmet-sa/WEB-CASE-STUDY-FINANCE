@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store, { RootState } from './store/store';
@@ -11,6 +11,8 @@ import Header from './components/header';
 import Drawer from './components/drawer'; 
 import { useSelector } from 'react-redux';
 import './App.css';
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './theme';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -20,33 +22,36 @@ function App() {
 
   return (
     <Provider store={store}>
-      <Router>
-        <div className={`app-container ${isDrawerOpen ? 'shifted' : ''}`}>
-          {isAuthenticated && <Header toggleDrawer={toggleDrawer} />}
-          {isAuthenticated && <Drawer isOpen={isDrawerOpen} onClose={function (): void {
-            throw new Error('Function not implemented.');
-          } } />}
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            {!isAuthenticated && (
-              <>
-                <Route path="/dashboard" element={<Navigate to="/login" />} />
-                <Route path="/debts" element={<Navigate to="/login" />} />
-                <Route path="/payment-plan" element={<Navigate to="/login" />} />
-              </>
-            )}
-            {isAuthenticated && (
-              <>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/debts" element={<DebtsPage />} />
-                <Route path="/payment-plan" element={<PaymentPlanPage />} />
-              </>
-            )}
-          </Routes>
-        </div>
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <div className={`app-container ${isDrawerOpen ? 'shifted' : ''}`}>
+            {isAuthenticated && <Header toggleDrawer={toggleDrawer} />}
+            {isAuthenticated && <Drawer isOpen={isDrawerOpen} onClose={toggleDrawer} />}
+            <Routes>
+              {isAuthenticated ? (
+                <>
+                  <Route path="/" element={<Navigate to="/dashboard" />} />
+                  <Route path="/register" element={<Navigate to="/dashboard" />} />
+                  <Route path="/login" element={<Navigate to="/dashboard" />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                </>
+              )}
+              {isAuthenticated && (
+                <>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/debts" element={<DebtsPage />} />
+                  <Route path="/payment-plan" element={<PaymentPlanPage />} />
+                </>
+              )}
+            </Routes>
+          </div>
+        </Router>
+      </ThemeProvider>
     </Provider>
   );
 }
