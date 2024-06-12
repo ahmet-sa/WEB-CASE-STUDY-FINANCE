@@ -1,7 +1,12 @@
+// types.ts or wherever you have defined your types
 export interface PaymentPlan {
-    paymentDate: string;
-    paymentAmount: number;
-  }
+  paymentDate: string;
+  paymentAmount: number;
+  isPaid: boolean; 
+  debtId: string;
+  userId: string;
+}
+
   
   export interface Debt {
     id: string;
