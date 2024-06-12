@@ -103,22 +103,26 @@ const PaymentPlanPage: React.FC = () => {
     <div className="p-4">
          {debts.length > 0 ? (
         <FormControl fullWidth>
-          <Select
+            <div className='flex justify-center w-full'>
+            <Select
             value={selectedDebt || ''}
             onChange={handleDebtChange}
             displayEmpty
             fullWidth
-            className="mb-4  !w-100 !filled  !text-center"
-          >
+            className="mb-4 !bg-white !border-2 !border-primary !rounded-10px !text-primary !w-150 !text-center !items-center"
+            >
             <MenuItem value="" disabled>
-              Select Debt
+                Select Debt
             </MenuItem>
             {debts.map((debt) => (
-              <MenuItem key={debt.id} value={debt.id}>
+                <MenuItem key={debt.id} value={debt.id}>
                 {debt.debtName}
-              </MenuItem>
+                </MenuItem>
             ))}
-          </Select>
+            </Select>
+            </div>
+      
+
         </FormControl>
       ) : (
         <div>No debts available. Please add a debt.</div>
@@ -142,13 +146,13 @@ const PaymentPlanPage: React.FC = () => {
                 <TableCell>
                   {!payment.isPaid ? (
                     <>
-                      <Button className='!normal-case' variant="contained" color="primary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
+                      <Button className='!normal-case !text-white' variant="contained" color="primary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
                       <Button   color="default" onClick={() => handleEditPayment(payment)}>
                       <FontAwesomeIcon icon={faEdit } className="text-primary mr-2" />
                       </Button>
                     </>
                   ) : (
-                    <Button className='!normal-case' variant="contained" color="secondary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
+                    <Button className='!normal-case !text-white' variant="contained" color="secondary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
                   )}
                 </TableCell>
               </TableRow>

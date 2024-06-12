@@ -102,7 +102,7 @@ export const autoUpdateTotalPaid = () => async (dispatch: any, getState: any) =>
   }
 
   upcomingPayments.sort((a, b) => new Date(a.paymentDate).getTime() - new Date(b.paymentDate).getTime());
-  const topUpcomingPayments = upcomingPayments.slice(0, 7);
+  const topUpcomingPayments = upcomingPayments.slice(0, 10);
 
   dispatch(setUpcomingPayments(topUpcomingPayments));
 };

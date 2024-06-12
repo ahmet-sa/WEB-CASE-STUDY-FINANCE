@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
   const remainingDebt = useSelector((state: RootState) => state.debts.remainingDebt);
   const upcomingPayments = useSelector((state: RootState) => state.debts.upcomingPayments);
   const [loading, setLoading] = useState(false);
-
+  const tableCellClass = '!text-primary !text-roboto text-16px';
   useEffect(() => {
     setLoading(true);
     dispatch(fetchDebts())
@@ -81,22 +81,22 @@ const DashboardPage: React.FC = () => {
         {upcomingPayments.length === 0 ? (
           <div className='text-secondary' >No upcoming payments.</div>
         ) : (
-          <table className="table">
+          <table  className="table  w-full text-center">
             <thead>
               <tr>
-                <th>Debt</th>
-                <th>Amount</th>
-                <th>Due Date</th>
+                <th className={tableCellClass} >Debt</th>
+                <th className={tableCellClass} >Amount</th>
+                <th className={tableCellClass} >Due Date</th>
               </tr>
             </thead>
             <tbody>
               {upcomingPayments.map((payment) => {
                 const debt = debts.find((d) => d.id === payment.debtId);
                 return (
-                  <tr key={payment.id}>
-                    <td>{debt?.debtName || `Debt ID: ${payment.debtId}`}</td>
-                    <td>${payment.paymentAmount.toFixed(2)}</td>
-                    <td>{new Date(payment.paymentDate).toLocaleDateString()}</td>
+                  <tr  className='tableRow' key={payment.id}>
+                    <td className='text-gray-5 font-semibold' >{debt?.debtName || `Debt ID: ${payment.debtId}`}</td>
+                    <td className='text-gray-5' >${payment.paymentAmount.toFixed(2)}</td>
+                    <td className='text-gray-5'  >{new Date(payment.paymentDate).toLocaleDateString()}</td>
                   </tr>
                 );
               })}
