@@ -1,5 +1,4 @@
 import { createTheme, Theme } from '@material-ui/core/styles';
-import { orange, blue } from '@material-ui/core/colors';
 
 declare module '@material-ui/core/styles/createTheme' {
   interface Theme {

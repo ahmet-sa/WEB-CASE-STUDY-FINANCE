@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper, Grid, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { TextField, Button,   Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import axiosInstance from '../../axios.config';
 import { Debt } from '../../types';
 

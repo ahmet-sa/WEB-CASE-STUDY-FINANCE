@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { Button, Table, TableHead, TableRow, TableCell, TableBody, Dialog } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { addDebts, updateTotalPaid } from '../store/debtsSlice'; 
 import axiosInstance from '../axios.config';
 import AddDebtForm from '../components/forms/AddDebtForm'; 
