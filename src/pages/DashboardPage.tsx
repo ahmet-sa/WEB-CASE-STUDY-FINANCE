@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { fetchDebts, autoUpdateTotalPaid } from '../store/debtsSlice';
 import { AppDispatch } from '../store/store'; 
-import { Debt, PaymentPlan } from '../../types';
 
 const COLORS = ['#0088FE', '#00C49F'];
 
@@ -22,7 +21,7 @@ const PieChartComponent = ({ data }: { data: any[] }) => {
           fill="#8884d8"
           label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
         >
-          {data.map((entry, index) => (
+          {data.map((_entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -34,7 +33,7 @@ const PieChartComponent = ({ data }: { data: any[] }) => {
 };
 
 const DashboardPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>(); // Use AppDispatch type for dispatch
+  const dispatch = useDispatch<AppDispatch>(); 
   const debts = useSelector((state: RootState) => state.debts.debts);
   const totalPaid = useSelector((state: RootState) => state.debts.totalPaid);
   const totalDebt = useSelector((state: RootState) => state.debts.totalDebt);

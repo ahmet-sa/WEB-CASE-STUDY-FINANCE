@@ -8,6 +8,7 @@ import axiosInstance from '../axios.config';
 import AddDebtForm from '../components/forms/AddDebtForm'; 
 import EditDebtForm from '../components/forms/EditDebtForm'; 
 import DeleteConfirmationForm from '../components/forms/DeleteConfirmationForm';
+import { useNavigate } from 'react-router-dom';
 
 const DebtsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ const DebtsPage: React.FC = () => {
 
   const debts = useSelector((state: RootState) => state.debts.debts) || [];
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDebts();
@@ -103,6 +104,10 @@ const DebtsPage: React.FC = () => {
       console.error('Error deleting debt:', error);
     }
   };
+
+  const handleViewPaymentPlan = (debtId: string) => {
+    navigate(`/payment-plan?debtId=${debtId}`);
+  };
   
   return (
     <div>
@@ -139,41 +144,41 @@ const DebtsPage: React.FC = () => {
                 <TableCell>{debt.installment}</TableCell>
                 <TableCell>
                   <Button variant="outlined" onClick={() => handleEdit(debt)}>Edit</Button>
-                  <Button variant="outlined">View Payment Plan</Button>
+                  <Button variant="outlined" onClick={() => handleViewPaymentPlan(debt.id.toString())}>View Payment Plan</Button>
                   <Button
                     variant="outlined"
-                    startIcon={<DeleteIcon />}onClick={() => handleDelete(debt.id.toString())}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-  
-        <Dialog open={openAddEditDialog} onClose={handleCloseAddEditDialog}>
-          {selectedDebt ? (
-            <EditDebtForm
-            debtId={selectedDebt.id.toString()} 
-              initialDebt={selectedDebt} 
-              onSubmit={handleSubmitEdit}
-              onClose={handleCloseAddEditDialog}
-            />
-          ) : (
-            <AddDebtForm onSubmit={handleSubmitNewDebt} />
-
+                    startIcon={<DeleteIcon />}
+                    onClick={() => handleDelete(debt.id.toString())}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
           )}
-        </Dialog>
-  
-        <DeleteConfirmationForm 
-          open={openDeleteDialog}  
-          onClose={handleCloseDeleteDialog} 
-          onConfirm={handleConfirmDelete} 
-        />
-      </div>
-    );
-  }
-  
-  export default DebtsPage;
+        </TableBody>
+      </Table>
+
+      <Dialog open={openAddEditDialog} onClose={handleCloseAddEditDialog}>
+        {selectedDebt ? (
+          <EditDebtForm
+            debtId={selectedDebt.id.toString()} 
+            initialDebt={selectedDebt} 
+            onSubmit={handleSubmitEdit}
+            onClose={handleCloseAddEditDialog}
+          />
+        ) : (
+          <AddDebtForm onSubmit={handleSubmitNewDebt} />
+        )}
+      </Dialog>
+
+      <DeleteConfirmationForm 
+        open={openDeleteDialog}  
+        onClose={handleCloseDeleteDialog} 
+        onConfirm={handleConfirmDelete} 
+      />
+    </div>
+  );
+};
+
+export default DebtsPage;

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Table, TableHead, TableRow, TableCell, TableBody, FormControl, Select, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import axiosInstance from '../axios.config';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PaymentPlanPage: React.FC = () => {
   const [paymentPlan, setPaymentPlan] = useState<any[]>([]);
@@ -14,14 +14,20 @@ const PaymentPlanPage: React.FC = () => {
   const [, setTotalPaid] = useState<number>(0); 
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
     } else {
+      const searchParams = new URLSearchParams(location.search);
+      const debtId = searchParams.get('debtId');
+      if (debtId) {
+        setSelectedDebt(debtId);
+      }
       fetchDebts();
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location.search]);
 
   const fetchDebts = async () => {
     try {
@@ -33,7 +39,6 @@ const PaymentPlanPage: React.FC = () => {
   };
 
   useEffect(() => {
-
     if (selectedDebt) {
       fetchPaymentPlan(selectedDebt);
     }
@@ -93,13 +98,14 @@ const PaymentPlanPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="p-4">
       <FormControl fullWidth>
         <Select
           value={selectedDebt || ''}
           onChange={handleDebtChange}
           displayEmpty
           fullWidth
+          className="mb-4"
         >
           <MenuItem value="" disabled>
             Select Debt
@@ -131,11 +137,11 @@ const PaymentPlanPage: React.FC = () => {
                 <TableCell>
                   {!payment.isPaid ? (
                     <>
-                      <Button onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
-                      <Button onClick={() => handleEditPayment(payment)}>Edit</Button>
+                      <Button variant="contained" color="primary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
+                      <Button variant="contained" color="default" onClick={() => handleEditPayment(payment)}>Edit</Button>
                     </>
                   ) : (
-                    <Button onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
+                    <Button variant="contained" color="secondary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
                   )}
                 </TableCell>
               </TableRow>
@@ -156,6 +162,7 @@ const PaymentPlanPage: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            className="mb-4"
           />
           <TextField
             label="Payment Amount"
@@ -163,6 +170,7 @@ const PaymentPlanPage: React.FC = () => {
             value={selectedPayment?.paymentAmount || ''}
             onChange={(e) => setSelectedPayment({...selectedPayment, paymentAmount: e.target.value})}
             fullWidth
+            className="mb-4"
           />
         </DialogContent>
         <DialogActions>
