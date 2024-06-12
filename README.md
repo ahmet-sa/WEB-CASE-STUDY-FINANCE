@@ -45,7 +45,19 @@ export default {
 
   ## registerPage
 
-  ![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/b453106c-4265-4ae5-8788-a588dcf62d95)
+![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/e9be89de-ff07-4a3d-9bfe-0c265990ba91)
+
+## DashboardPage 
+![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/e50607fd-c796-4a31-b706-3e875f3c1a49)
+
+## DepthPage
+![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/a21d4a3b-d427-4581-b56e-639fc6c8a0d9)
+
+## PaymentPlanPage
+![image](https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE/assets/59730181/29f17da4-105b-404e-ac8c-0c7a96061885)
+
+
+
 
 
 
