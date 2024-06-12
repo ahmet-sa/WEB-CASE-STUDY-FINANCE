@@ -3,7 +3,12 @@ you can clone project https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE.git
 after download you can install library
 # Set up
 you can run in terminal 
-npm install vite --save-dev
+
+# npm install vite --save-dev --force
+and
+# npm install vite  --force
+
+
 this code install library after this code 
 you can write npm run dev to run project
 
