@@ -6,6 +6,7 @@ import { initialDebtState, initialErrorsState } from '../../constants';
 const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit }) => {
   const [newDebt, setNewDebt] = useState<Debt>(initialDebtState);
   const [formErrors, setFormErrors] = useState<FormErrors>(initialErrorsState);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const parsedValue = parseFloat(value);
@@ -76,154 +77,158 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
   const isFormValid = () => {
     for (const key in newDebt) {
       const value = newDebt[key as keyof Debt];
-      if (key !== 'lenderName' && key !== 'description') {
+      if (   key !== 'userId' &&  key !== 'updatedAt' &&  key !== 'updatedAt' && key !== 'lenderName' && key !== 'id' &&  key !== 'description' &&  key !== 'createdAt' &&  key !== 'updatedAt') {
         if (
           (typeof value === 'string' && value.trim() === '') ||
           (typeof value === 'number' && value <= 0) ||
           (Array.isArray(value) && value.length === 0)
         ) {
+          console.log(key)
           return false;
         }
       }
     }
     return true;
   };
+
   return (
     <form onSubmit={handleSubmit}>
-      <DialogTitle>Add New Debt</DialogTitle>
-      <DialogContent>
-        <TextField
-          name="debtName"
-          label="Debt Name"
-          value={newDebt.debtName}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          error={!!formErrors.debtName}
-          helperText={formErrors.debtName}
-        />
-        <TextField
-          name="lenderName"
-          label="Lender Name"
-          value={newDebt.lenderName}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          error={!!formErrors.lenderName}
-          helperText={formErrors.lenderName}
-        />
-        <TextField
-          name="debtAmount"
-          label="Debt Amount"
-          type="number"
-          value={newDebt.debtAmount}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          error={!!formErrors.debtAmount}
-          helperText={formErrors.debtAmount}
-        />
-        <TextField
-          name="interestRate"
-          label="Interest Rate"
-          type="number"
-          value={newDebt.interestRate}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          error={!!formErrors.interestRate}
-          helperText={formErrors.interestRate}
-        />
-        <TextField
-          name="installment"
-          label="Installment"
-          type="number"
-          value={newDebt.installment}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          error={!!formErrors.installment}
-          helperText={formErrors.installment}
-        />
-        <TextField
-          name="amount"
-          label="Total Amount"
-          type="number"
-          value={newDebt.amount}
-          disabled
-          fullWidth
-          margin="dense"
-          error={!!formErrors.amount}
-          helperText={formErrors.amount}
-        />
-        <TextField
-          name="paymentStart"
-          label="Payment Start"
-          type="date"
-          value={newDebt.paymentStart}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="dense"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          error={!!formErrors.paymentStart}
-          helperText={formErrors.paymentStart}
-        />
-        <TextField
-          name="description"
-          label="Description"
-          value={newDebt.description}
-          onChange={handleChange}
-          fullWidth
-          margin="dense"
-          error={!!formErrors.description}
-          helperText={formErrors.description}
-        />
+      <div className="p-4  w-100 bg-white rounded-lg shadow-lg">
+        <h1 className="text-2xl font-semibold mb-4 text-primary text-center">Add New Debt</h1>
+        <div className="flex flex-col space-y-4">
+          <TextField
+            name="debtName"
+            label="Debt Name"
+            value={newDebt.debtName}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            error={!!formErrors.debtName}
+            helperText={formErrors.debtName}
+          />
+          <TextField
+            name="lenderName"
+            label="Lender Name"
+            value={newDebt.lenderName}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            error={!!formErrors.lenderName}
+            helperText={formErrors.lenderName}
+          />
+          <TextField
+            name="debtAmount"
+            label="Debt Amount"
+            type="number"
+            value={newDebt.debtAmount}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            error={!!formErrors.debtAmount}
+            helperText={formErrors.debtAmount}
+          />
+          <TextField
+            name="interestRate"
+            label="Interest Rate"
+            type="number"
+            value={newDebt.interestRate}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            error={!!formErrors.interestRate}
+            helperText={formErrors.interestRate}
+          />
+          <TextField
+            name="installment"
+            label="Installment"
+            type="number"
+            value={newDebt.installment}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            error={!!formErrors.installment}
+            helperText={formErrors.installment}
+          />
+          <TextField
+            name="amount"
+            label="Total Amount"
+            type="number"
+            value={newDebt.amount}
+            disabled
+            fullWidth
+            margin="dense"
+            error={!!formErrors.amount}
+            helperText={formErrors.amount}
+          />
+          <TextField
+            name="paymentStart"
+            label="Payment Start"
+            type="date"
+            value={newDebt.paymentStart}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="dense"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={!!formErrors.paymentStart}
+            helperText={formErrors.paymentStart}
+          />
+          <TextField
+            name="description"
+            label="Description"
+            value={newDebt.description}
+            onChange={handleChange}
+            fullWidth
+            margin="dense"
+            error={!!formErrors.description}
+            helperText={formErrors.description}
+          />
 
-        {newDebt.paymentPlan.map((plan, index) => (
-          <div key={index}>
-            <TextField
-              name={`paymentPlan.${index}.paymentDate`}
-              label="Payment Date"
-              type="date"
-              value={plan.paymentDate}
-              onChange={handleChange}
-              required
-              fullWidth
-              margin="dense"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={!!formErrors.paymentPlan[index]?.paymentDate}
-              helperText={formErrors.paymentPlan[index]?.paymentDate}
-            />
-            <TextField
-              name={`paymentPlan.${index}.paymentAmount`}
-              label="Payment Amount"
-              type="number"
-              value={plan.paymentAmount}
-              onChange={handleChange}
-              required
-              fullWidth
-              margin="dense"
-              error={!!formErrors.paymentPlan[index]?.paymentAmount}
-              helperText={formErrors.paymentPlan[index]?.paymentAmount}
-            />
-          </div>
-        ))}
-        <Button onClick={generatePaymentPlan} color="primary">
-          Ödeme Planı Oluştur
-        </Button>
-      </DialogContent>
-      <DialogActions>
-        <Button type="submit" color="primary" disabled={!isFormValid()}>
+          {newDebt.paymentPlan.map((plan, index) => (
+            <div key={index}>
+              <TextField
+                name={`paymentPlan.${index}.paymentDate`}
+                label="Payment Date"
+                type="date"
+                value={plan.paymentDate}
+                onChange={handleChange}
+                required
+                fullWidth
+                margin="dense"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={!!formErrors.paymentPlan[index]?.paymentDate}
+                helperText={formErrors.paymentPlan[index]?.paymentDate}
+              />
+              <TextField
+                name={`paymentPlan.${index}.paymentAmount`}
+                label="Payment Amount"
+                type="number"
+                value={plan.paymentAmount}
+                onChange={handleChange}
+                required
+                fullWidth
+                margin="dense"
+                error={!!formErrors.paymentPlan[index]?.paymentAmount}
+                helperText={formErrors.paymentPlan[index]?.paymentAmount}
+              />
+            </div>
+          ))}
+          <Button className='!bg-primary !text-white !w-40 !rounded-10px !normal-case !mt-20px' onClick={generatePaymentPlan} color="primary">
+            Create Payment Plan
+          </Button>
+        </div>
+      </div>
+      <DialogActions className='bg-white' >
+        <Button className='!bg-primary !rounded-10px !text-white' type="submit" color="primary" disabled={!isFormValid()}>
           Add
         </Button>
       </DialogActions>

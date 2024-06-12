@@ -4,7 +4,9 @@ import { RootState } from '../store/store';
 import { Table, TableHead, TableRow, TableCell, TableBody, FormControl, Select, MenuItem, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
 import axiosInstance from '../axios.config';
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+const tableCellClass = '!text-primary !text-roboto text-16px';
 const PaymentPlanPage: React.FC = () => {
   const [paymentPlan, setPaymentPlan] = useState<any[]>([]);
   const [selectedDebt, setSelectedDebt] = useState<string | null>(null);
@@ -106,7 +108,7 @@ const PaymentPlanPage: React.FC = () => {
             onChange={handleDebtChange}
             displayEmpty
             fullWidth
-            className="mb-4"
+            className="mb-4  !w-100 !filled  !text-center"
           >
             <MenuItem value="" disabled>
               Select Debt
@@ -125,10 +127,10 @@ const PaymentPlanPage: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Payment Date</TableCell>
-              <TableCell>Payment Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell className={tableCellClass} >Payment Date</TableCell>
+              <TableCell className={tableCellClass} >Payment Amount</TableCell>
+              <TableCell className={tableCellClass} >Status</TableCell>
+              <TableCell className={tableCellClass} >Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,11 +142,13 @@ const PaymentPlanPage: React.FC = () => {
                 <TableCell>
                   {!payment.isPaid ? (
                     <>
-                      <Button variant="contained" color="primary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
-                      <Button variant="contained" color="default" onClick={() => handleEditPayment(payment)}>Edit</Button>
+                      <Button className='!normal-case' variant="contained" color="primary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Paid</Button>
+                      <Button   color="default" onClick={() => handleEditPayment(payment)}>
+                      <FontAwesomeIcon icon={faEdit } className="text-primary mr-2" />
+                      </Button>
                     </>
                   ) : (
-                    <Button variant="contained" color="secondary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
+                    <Button className='!normal-case' variant="contained" color="secondary" onClick={() => handlePaymentStatusChange(payment.id)}>Mark as Not Paid</Button>
                   )}
                 </TableCell>
               </TableRow>

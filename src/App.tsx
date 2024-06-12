@@ -24,10 +24,10 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router>
-          <div className={`app-container ${isDrawerOpen ? 'shifted' : ''}`}>
+          <div className={`app-container pa-4 ${isDrawerOpen ? 'shifted' : ''}`}>
             {isAuthenticated && <Header toggleDrawer={toggleDrawer} />}
             {isAuthenticated && <Drawer isOpen={isDrawerOpen} onClose={toggleDrawer} />}
-            <Routes>
+            <Routes >
               {isAuthenticated ? (
                 <>
                   <Route path="/" element={<Navigate to="/dashboard" />} />

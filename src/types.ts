@@ -20,6 +20,7 @@ export interface PaymentPlan {
     paymentPlan: PaymentPlan[]; 
   }
   
+  
   export interface FormErrors {
     debtName: string;
     lenderName: string;

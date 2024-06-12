@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Grid, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import axiosInstance from '../../axios.config';
 import { Debt } from '../../types';
 
@@ -71,7 +71,7 @@ const EditDebtForm: React.FC<EditDebtFormProps> = ({ debtId, onSubmit, onClose }
   return (
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
       <form onSubmit={handleSubmit}>
-        <DialogTitle>Edit Debt</DialogTitle>
+        <DialogTitle className='!text-center !text-30px !text-primary'>Edit Debt</DialogTitle>
         <DialogContent>
           {updatedDebt && (
             <div>
@@ -145,9 +145,9 @@ const EditDebtForm: React.FC<EditDebtFormProps> = ({ debtId, onSubmit, onClose }
             </div>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button type="submit" color="primary">Save</Button>
-          <Button onClick={onClose} color="primary">Cancel</Button>
+        <DialogActions className='!flex  !justify-center'>
+          <Button className='!bg-primary !text-white !w-20 !rounded-10px !normal-case !mt-20px' type="submit" color="primary">Save</Button>
+          <Button className='!bg-primary !text-white !w-20 !rounded-10px !normal-case !mt-20px' onClick={onClose} color="primary">Cancel</Button>
         </DialogActions>
       </form>
     </Dialog>

@@ -19,14 +19,14 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer }) => {
   };
 
   return (
-    <header className="h-20 bg-white text-white flex items-center justify-between px-4  ">
+    <header className="h-20 bg-white text-white flex items-center justify-between px-4 !border-2 ">
       <div>
         <button onClick={toggleDrawer} className="text-primary bg-white hover:border-primary">
           <FontAwesomeIcon icon={faBars} /> 
         </button>
       </div>
       <div>
-        <button onClick={handleLogout} className="text-white bg-primary-light hover:border-primary">Sign Out</button>
+        <button onClick={handleLogout} className="text-white bg-primary hover:border-primary">Sign Out</button>
       </div>
     </header>
   );

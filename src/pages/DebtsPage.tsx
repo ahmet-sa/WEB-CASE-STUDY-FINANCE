@@ -9,7 +9,10 @@ import AddDebtForm from '../components/forms/AddDebtForm';
 import EditDebtForm from '../components/forms/EditDebtForm'; 
 import DeleteConfirmationForm from '../components/forms/DeleteConfirmationForm';
 import { useNavigate } from 'react-router-dom';
+import { faEdit, faTrash  } from '@fortawesome/free-solid-svg-icons'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+const tableCellClass = '!text-primary !text-roboto text-16px';
 const DebtsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,26 +114,28 @@ const DebtsPage: React.FC = () => {
   
   return (
     <div>
-      <Button className='!ma-2' variant="contained" color="primary" onClick={handleClickOpen}>Add New Debt</Button>
-      {loading && <div>Loading...</div>}
+   <Button className='!ma-2 !rounded-10px !shadow-none !text-white !normal-case hover:!border-white ' variant="contained" color="primary" onClick={handleClickOpen}>
+  Add New Debt
+</Button>
+      {loading && <div className={tableCellClass} >Loading...</div>}
       {error && <div>Error: {error}</div>}
-      <Table>
+      <Table >
         <TableHead>
           <TableRow>
-            <TableCell>Debt Name</TableCell>
-            <TableCell>Lender Name</TableCell>
-            <TableCell>Debt Amount</TableCell>
-            <TableCell>Interest Rate</TableCell>
-            <TableCell>Total Amount</TableCell>
-            <TableCell>Payment Start</TableCell>
-            <TableCell>Installment</TableCell>
-            <TableCell>Action</TableCell>
+          <TableCell className={tableCellClass}>Debt Name</TableCell>
+          <TableCell className={tableCellClass}>Lender Name</TableCell>
+          <TableCell className={tableCellClass}>Debt Amount</TableCell>
+          <TableCell className={tableCellClass}>Interest Rate</TableCell>
+          <TableCell className={tableCellClass}>Total Amount</TableCell>
+          <TableCell className={tableCellClass}>Payment Start</TableCell>
+          <TableCell className={tableCellClass}>Installment</TableCell>
+          <TableCell className={tableCellClass}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {debts.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8}>No debts found</TableCell>
+              <TableCell className='!text-secondary ' colSpan={8}>No debts found</TableCell>
             </TableRow>
           ) : (
             debts.map((debt, index) => (
@@ -143,15 +148,18 @@ const DebtsPage: React.FC = () => {
                 <TableCell>{new Date(debt.paymentStart).toLocaleDateString()}</TableCell>
                 <TableCell>{debt.installment}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" onClick={() => handleEdit(debt)}>Edit</Button>
-                  <Button variant="outlined" onClick={() => handleViewPaymentPlan(debt.id.toString())}>View Payment Plan</Button>
+                  <Button  onClick={() => handleEdit(debt)}>
+                  <FontAwesomeIcon icon={faEdit } className="text-primary mr-2" />
+
+                  </Button>
+             
                   <Button
-                    variant="outlined"
-                    startIcon={<DeleteIcon />}
+                    
                     onClick={() => handleDelete(debt.id.toString())}
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrash } className="text-primary mr-2" />
                   </Button>
+                  <Button className='!normal-case !bg-primary !text-white !rounded-10px'  onClick={() => handleViewPaymentPlan(debt.id.toString())}> Payment Plan</Button>
                 </TableCell>
               </TableRow>
             ))

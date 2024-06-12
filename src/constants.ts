@@ -1,4 +1,4 @@
-
+// constants.ts
 
 import { Debt, FormErrors } from './types';
 
@@ -12,11 +12,6 @@ export const initialDebtState: Debt = {
     installment: 0,
     description: '',
     paymentPlan: [],
-    id: '',
-    createdAt: '',
-    updatedAt: '',
-    isActive: false,
-    userId: ''
 };
 
 export const initialErrorsState: FormErrors = {
