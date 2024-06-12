@@ -6,7 +6,7 @@ you can run in terminal
 
 # npm install vite --save-dev --force
 and
-# npm install vite  --force
+# npm install  --force
 
 
 this code install library after this code 
