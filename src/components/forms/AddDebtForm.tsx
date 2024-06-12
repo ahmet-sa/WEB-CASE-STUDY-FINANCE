@@ -68,14 +68,9 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
-      try {
-        const response = await axiosInstance.post('/finance/debt', newDebt);
-        onSubmit(response.data);
-        setNewDebt(initialDebtState);
-        setFormErrors(initialErrorsState);
-      } catch (error) {
-        console.error('Borç eklenirken hata oluştu:', error);
-      }
+      onSubmit(newDebt);
+      setNewDebt(initialDebtState);
+      setFormErrors(initialErrorsState);
     }
   };
 

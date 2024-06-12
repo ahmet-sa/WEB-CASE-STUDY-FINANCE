@@ -2,78 +2,110 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { Button, Table, TableHead, TableRow, TableCell, TableBody, Dialog } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete'; // Import DeleteIcon
-import { addDebts, addDebt } from '../store/debtsSlice'; // Import removeDebt action creator
+import DeleteIcon from '@material-ui/icons/Delete';
+import { addDebts, updateTotalPaid } from '../store/debtsSlice'; 
 import axiosInstance from '../axios.config';
 import AddDebtForm from '../components/forms/AddDebtForm'; 
 import EditDebtForm from '../components/forms/EditDebtForm'; 
+import DeleteConfirmationForm from '../components/forms/DeleteConfirmationForm';
 
 const DebtsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-  const [selectedDebt, setSelectedDebt] = useState<any | null>(null); 
+  const [openAddEditDialog, setOpenAddEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedDebt, setSelectedDebt] = useState<any | null>(null);
+  const [debtToDeleteId, setDebtToDeleteId] = useState<string | null>(null);
 
   const debts = useSelector((state: RootState) => state.debts.debts) || [];
+  const totalDebt = useSelector((state: RootState) => state.debts.totalDebt); 
+  const remainingDebt = useSelector((state: RootState) => state.debts.remainingDebt); 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchDebts = async () => {
-      setLoading(true);
-      try {
-        const response = await axiosInstance.get('/finance/debt');
-        dispatch(addDebts(response.data.data));
-      } catch (error) {
-        setError('Error fetching debts: ' + error.message);
-        console.error('Error fetching debts:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  console.log(totalDebt)
+  useEffect(() => {
     fetchDebts();
-  }, [dispatch]);
+  }, []);
+
+  const fetchDebts = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/finance/debt');
+      dispatch(addDebts(response.data.data));
+      dispatch(updateTotalPaid()); 
+    } catch (error) {
+      setError('Error fetching debts: ' + error.message);
+      console.error('Error fetching debts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleClickOpen = () => {
-    setSelectedDebt(null); // New debt case, reset selectedDebt
-    setOpen(true);
+    setSelectedDebt(null);
+    setOpenAddEditDialog(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseAddEditDialog = () => {
+    setOpenAddEditDialog(false);
+    fetchDebts(); 
   };
 
-  const handleSubmitNewDebt = (newDebt: any) => {
-    dispatch(addDebt(newDebt));
-    setOpen(false);
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setDebtToDeleteId(null);
+  };
+
+  const handleSubmitNewDebt = async (newDebt: any) => {
+    try {
+      const response = await axiosInstance.post('/finance/debt', {
+        debtName: newDebt.debtName, 
+        ...newDebt 
+      });
+      if (response.status === 200) {
+        setOpenAddEditDialog(false);
+        fetchDebts(); 
+      } else {
+        setError('Error adding new debt: Unexpected response from server');
+      }
+    } catch (error) {
+      setError('Error adding new debt: ' + error.message);
+      console.error('Error adding new debt:', error);
+    }
   };
 
   const handleEdit = (debt: any) => {
     setSelectedDebt(debt);
-    setOpen(true);
+    setOpenAddEditDialog(true);
   };
 
   const handleSubmitEdit = async (updatedDebt: any) => {
     try {
       await axiosInstance.put(`/finance/debt/${updatedDebt.id}`, updatedDebt);
-      // Update debt in Redux store
-      dispatch(updateDebt(updatedDebt));
+      setOpenAddEditDialog(false);
+      fetchDebts(); 
     } catch (error) {
+      setError('Error updating debt: ' + error.message);
       console.error('Error updating debt:', error);
     }
-    setOpen(false);
   };
 
-  const handleDelete = async (debtId: string) => {
+  const handleDelete = (debtId: string) => {
+    setDebtToDeleteId(debtId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await axiosInstance.delete(`/finance/debt/${debtId}`);
-      // Remove the deleted debt from the Redux store
-      dispatch(removeDebt(debtId));
+      await axiosInstance.delete(`/finance/debt/${debtToDeleteId}`);
+      setOpenDeleteDialog(false);
+      fetchDebts(); 
     } catch (error) {
+      setError('Error deleting debt: ' + error.message);
       console.error('Error deleting debt:', error);
     }
   };
-
   return (
     <div>
       <Button className='!ma-2' variant="contained" color="primary" onClick={handleClickOpen}>Add New Debt</Button>
@@ -99,7 +131,7 @@ const DebtsPage: React.FC = () => {
             </TableRow>
           ) : (
             debts.map((debt, index) => (
-              <TableRow key={index} onClick={() => handleEdit(debt)}>
+              <TableRow key={index}>
                 <TableCell>{debt.debtName}</TableCell>
                 <TableCell>{debt.lenderName}</TableCell>
                 <TableCell>{debt.debtAmount}</TableCell>
@@ -112,32 +144,37 @@ const DebtsPage: React.FC = () => {
                   <Button variant="outlined">View Payment Plan</Button>
                   <Button
                     variant="outlined"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => handleDelete(debt.id)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
+                    startIcon={<DeleteIcon />}onClick={() => handleDelete(debt.id)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+  
+        <Dialog open={openAddEditDialog} onClose={handleCloseAddEditDialog}>
+          {selectedDebt ? (
+            <EditDebtForm
+              debtId={selectedDebt.id} 
+              initialDebt={selectedDebt} 
+              onSubmit={handleSubmitEdit}
+              onClose={handleCloseAddEditDialog}
+            />
+          ) : (
+            <AddDebtForm onSubmit={handleSubmitNewDebt} onClose={handleCloseAddEditDialog} />
           )}
-        </TableBody>
-      </Table>
-
-      <Dialog open={open} onClose={handleClose}>
-        {selectedDebt ? (
-          <EditDebtForm
-            debtId={selectedDebt.id} 
-            initialDebt={selectedDebt} 
-            onSubmit={handleSubmitEdit}
-            onClose={handleClose}
-          />
-        ) : (
-          <AddDebtForm onSubmit={handleSubmitNewDebt} onClose={handleClose} />
-        )}
-      </Dialog>
-    </div>
-  );
-}
-
-export default DebtsPage;
+        </Dialog>
+  
+        <DeleteConfirmationForm 
+          open={openDeleteDialog}  
+          onClose={handleCloseDeleteDialog} 
+          onConfirm={handleConfirmDelete} 
+        />
+      </div>
+    );
+  }
+  
+  export default DebtsPage;
