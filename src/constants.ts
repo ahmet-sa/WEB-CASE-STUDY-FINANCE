@@ -1,4 +1,3 @@
-// constants.ts
 
 import { Debt, FormErrors } from './types';
 
