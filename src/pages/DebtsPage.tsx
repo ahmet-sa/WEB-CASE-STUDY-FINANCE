@@ -61,7 +61,7 @@ const DebtsPage: React.FC = () => {
   const handleSubmitNewDebt = async (newDebt: any) => {
     try {
       const response = await axiosInstance.post('/finance/debt', {
-        debtName: newDebt.debtName, 
+        debtName: newDebt.debtName,
         ...newDebt 
       });
       if (response.status === 200) {

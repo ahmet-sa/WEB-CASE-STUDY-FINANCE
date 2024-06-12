@@ -17,7 +17,7 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
         i === parseInt(index) ? { ...plan, [field]: value } : plan
       );
       const updatedPaymentPlanErrors = formErrors.paymentPlan.map((plan, i) =>
-        i === parseInt(index) ? { ...plan, [field]: value ? '' : 'Gerekli' } : plan
+        i === parseInt(index) ? { ...plan, [field]: value ? '' : 'Required' } : plan
       );
       setNewDebt({ ...newDebt, paymentPlan: updatedPaymentPlan });
       setFormErrors({ ...formErrors, paymentPlan: updatedPaymentPlanErrors });
@@ -32,7 +32,7 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
         );
       }
       setNewDebt(updatedDebt);
-      setFormErrors({ ...formErrors, [name]: value ? '' : 'Gerekli' });
+      setFormErrors({ ...formErrors, [name]: value ? '' : 'Required' });
     }
   };
 
@@ -228,9 +228,14 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
         </div>
       </div>
       <DialogActions className='bg-white' >
-        <Button className='!bg-primary !rounded-10px !text-white' type="submit" color="primary" disabled={!isFormValid()}>
-          Add
-        </Button>
+      <Button
+        className={isFormValid() ? "!bg-primary !rounded-10px !text-white" : "!bg-white !rounded-10px !text-white"}
+        type="submit"
+        color="primary"
+        disabled={!isFormValid()}
+          >
+              Add
+      </Button>
       </DialogActions>
     </form>
   );

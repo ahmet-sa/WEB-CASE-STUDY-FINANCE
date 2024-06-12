@@ -36,8 +36,7 @@ const RegisterPage: React.FC = () => {
 
       const response = await axiosInstance.post('/auth/register', formData);
       console.log('Response:', response.data);
-      // Handle successful registration
-      navigate('/login'); // Navigate to the login page after successful registration
+      navigate('/login'); 
 
     } catch (error: any) {
       setError('An error occurred');
