@@ -14,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ toggleDrawer }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     dispatch(logout());
     navigate('/login');
   };
