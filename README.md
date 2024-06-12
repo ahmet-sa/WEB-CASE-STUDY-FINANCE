@@ -7,10 +7,13 @@ you can run in terminal
 # npm install vite --save-dev --force
 and
 # npm install  --force
+#  npm audit fix
 
 
 this code install library after this code 
-you can write npm run dev to run project
+you can write
+# npm run dev to run
+project
 
 
 # React + TypeScript + Vite
