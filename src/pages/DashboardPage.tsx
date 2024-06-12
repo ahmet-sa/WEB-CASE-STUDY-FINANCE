@@ -3,6 +3,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { fetchDebts, autoUpdateTotalPaid } from '../store/debtsSlice';
+import { AppDispatch } from '../store/store'; 
+import { Debt, PaymentPlan } from '../../types';
 
 const COLORS = ['#0088FE', '#00C49F'];
 
@@ -32,7 +34,7 @@ const PieChartComponent = ({ data }: { data: any[] }) => {
 };
 
 const DashboardPage: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>(); // Use AppDispatch type for dispatch
   const debts = useSelector((state: RootState) => state.debts.debts);
   const totalPaid = useSelector((state: RootState) => state.debts.totalPaid);
   const totalDebt = useSelector((state: RootState) => state.debts.totalDebt);
@@ -43,9 +45,9 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     dispatch(fetchDebts())
-      .then(() => dispatch(autoUpdateTotalPaid())) // Update total paid and fetch upcoming payments
+      .then(() => dispatch(autoUpdateTotalPaid())) 
       .then(() => setLoading(false))
-      .catch((error) => {
+      .catch((error: any) => {
         console.error('Error fetching debts:', error);
         setLoading(false);
       });
@@ -83,6 +85,7 @@ const DashboardPage: React.FC = () => {
           <ul style={{ listStyleType: 'none', padding: 0 }}>
             {upcomingPayments.map((payment) => {
               const debt = debts.find((d) => d.id === payment.debtId);
+              console.log(debt)
               return (
                 <li key={payment.id} style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
                   {debt?.debtName || `Debt ID: ${payment.debtId}`} - Amount: ${payment.paymentAmount.toFixed(2)} - Due Date: {new Date(payment.paymentDate).toLocaleDateString()}

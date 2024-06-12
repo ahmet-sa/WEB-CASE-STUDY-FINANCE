@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axiosInstance from '../axios.config';
-
+import { ReactNode } from 'react';
 interface Payment {
   id: number;
   debtId: number;
@@ -10,6 +10,10 @@ interface Payment {
 }
 
 interface Debt {
+  lenderName: ReactNode;
+  debtAmount: ReactNode;
+  interestRate: ReactNode;
+  debtName: ReactNode;
   id: number;
   amount: number;
   installment: number;
@@ -22,7 +26,7 @@ interface DebtsState {
   totalDebt: number;
   remainingDebt: number;
   totalPaid: number;
-  upcomingPayments: Payment[]; // New state for upcoming payments
+  upcomingPayments: Payment[]; 
 }
 
 const initialState: DebtsState = {
@@ -30,7 +34,7 @@ const initialState: DebtsState = {
   totalDebt: 0,
   remainingDebt: 0,
   totalPaid: 0,
-  upcomingPayments: [], // Initialize upcoming payments
+  upcomingPayments: [], 
 };
 
 const debtsSlice = createSlice({
@@ -66,7 +70,6 @@ export const { addDebts, addDebt, updateTotalPaid, updateTotalDebt, setUpcomingP
 
 export default debtsSlice.reducer;
 
-// Fetch debts from the API
 export const fetchDebts = () => async (dispatch: any) => {
   try {
     const response = await axiosInstance.get('/finance/debt');
@@ -76,7 +79,6 @@ export const fetchDebts = () => async (dispatch: any) => {
   }
 };
 
-// Automatically update total paid and fetch upcoming payments
 export const autoUpdateTotalPaid = () => async (dispatch: any, getState: any) => {
   const state = getState();
   const debts = state.debts.debts;
@@ -99,7 +101,6 @@ export const autoUpdateTotalPaid = () => async (dispatch: any, getState: any) =>
     }
   }
 
-  // Sort and select the top 7 upcoming payments by date
   upcomingPayments.sort((a, b) => new Date(a.paymentDate).getTime() - new Date(b.paymentDate).getTime());
   const topUpcomingPayments = upcomingPayments.slice(0, 7);
 

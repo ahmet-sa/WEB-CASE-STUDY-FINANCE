@@ -3,7 +3,7 @@ export interface PaymentPlan {
     paymentAmount: number;
   }
   
- export interface Debt {
+  export interface Debt {
     id: string;
     createdAt: string;
     updatedAt: string;
@@ -17,18 +17,18 @@ export interface PaymentPlan {
     installment: number;
     description: string;
     userId: string;
+    paymentPlan: PaymentPlan[]; 
   }
   
-  
-export interface FormErrors {
+  export interface FormErrors {
     debtName: string;
-    lenderName?: string; 
+    lenderName: string;
     debtAmount: string;
     interestRate: string;
     amount: string;
     paymentStart: string;
     installment: string;
-    description?: string; 
+    description: string;
     paymentPlan: { paymentDate: string; paymentAmount: string }[];
   }
   

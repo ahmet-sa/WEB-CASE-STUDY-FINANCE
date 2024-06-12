@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import axiosInstance from '../../axios.config';
+import { Debt } from '../../types';
 
-const EditDebtForm: React.FC<{ debtId: string, onSubmit: (updatedDebt: any) => void, onClose: () => void }> = ({ debtId, onSubmit, onClose }) => {
+interface EditDebtFormProps {
+  debtId: string;
+  initialDebt: any;
+  onSubmit: (updatedDebt: any) => Promise<void>;
+  onClose: () => void; 
+}
+
+const EditDebtForm: React.FC<EditDebtFormProps> = ({ debtId, onSubmit, onClose }) => {
   const [updatedDebt, setUpdatedDebt] = useState<any>(null);
   const [amount, setAmount] = useState<number>(0);
 
@@ -33,8 +41,8 @@ const EditDebtForm: React.FC<{ debtId: string, onSubmit: (updatedDebt: any) => v
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    let updatedValue = value;
-    // If the changed field is debtAmount, interestRate, or installment, update the amount
+    let updatedValue: string | number = value;
+    
     if (name === 'debtAmount' || name === 'interestRate' || name === 'installment') {
       const parsedValue = parseFloat(value);
       updatedValue = parsedValue;
@@ -44,13 +52,13 @@ const EditDebtForm: React.FC<{ debtId: string, onSubmit: (updatedDebt: any) => v
         name === 'installment' ? parsedValue : updatedDebt.installment
       ));
     }
-
-    setUpdatedDebt(prevState => ({
-      ...prevState,
-      [name]: updatedValue
-    }));
+  
+    setUpdatedDebt((prevState: Debt) => ({
+        ...prevState,
+        [name]: updatedValue
+      }));
   };
-
+  
   const calculateAmount = (debtAmount: number, interestRate: number, installment: number) => {
     if (debtAmount <= 0 || interestRate <= 0 || installment <= 0) {
       return 0;

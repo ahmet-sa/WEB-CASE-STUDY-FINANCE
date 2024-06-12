@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { DialogTitle, DialogContent, DialogActions, TextField, Button } from '@material-ui/core';
-import axiosInstance from '../../axios.config';
 import { Debt, FormErrors, PaymentPlan } from '../../types';
 import { initialDebtState, initialErrorsState } from '../../constants';
 
@@ -75,15 +74,16 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
   };
 
   const isFormValid = () => {
-    // lenderName ve description zorunlu değil; diğer alanlar zorunlu
     for (const key in newDebt) {
-      if (
-        key !== 'lenderName' &&
-        key !== 'description' &&
-        (newDebt[key as keyof Debt] === '' ||
-          (typeof newDebt[key as keyof Debt] === 'object' && !newDebt[key as keyof Debt].length))
-      ) {
-        return false;
+      const value = newDebt[key as keyof Debt];
+      if (key !== 'lenderName' && key !== 'description') {
+        if (
+          (typeof value === 'string' && value.trim() === '') ||
+          (typeof value === 'number' && value <= 0) ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
+          return false;
+        }
       }
     }
     return true;

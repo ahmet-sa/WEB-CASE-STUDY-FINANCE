@@ -18,12 +18,9 @@ const DebtsPage: React.FC = () => {
   const [debtToDeleteId, setDebtToDeleteId] = useState<string | null>(null);
 
   const debts = useSelector((state: RootState) => state.debts.debts) || [];
-  const totalDebt = useSelector((state: RootState) => state.debts.totalDebt); 
-  const remainingDebt = useSelector((state: RootState) => state.debts.remainingDebt); 
   const dispatch = useDispatch();
 
 
-  console.log(totalDebt)
   useEffect(() => {
     fetchDebts();
   }, []);
@@ -33,9 +30,9 @@ const DebtsPage: React.FC = () => {
     try {
       const response = await axiosInstance.get('/finance/debt');
       dispatch(addDebts(response.data.data));
-      dispatch(updateTotalPaid()); 
+      dispatch(updateTotalPaid(response.data.totalPaid));
     } catch (error) {
-      setError('Error fetching debts: ' + error.message);
+      setError('Error fetching debts: ' + (error as Error).message);
       console.error('Error fetching debts:', error);
     } finally {
       setLoading(false);
@@ -70,7 +67,7 @@ const DebtsPage: React.FC = () => {
         setError('Error adding new debt: Unexpected response from server');
       }
     } catch (error) {
-      setError('Error adding new debt: ' + error.message);
+      setError('Error adding new debt: ' + (error as Error).message);
       console.error('Error adding new debt:', error);
     }
   };
@@ -86,7 +83,7 @@ const DebtsPage: React.FC = () => {
       setOpenAddEditDialog(false);
       fetchDebts(); 
     } catch (error) {
-      setError('Error updating debt: ' + error.message);
+      setError('Error updating debt: ' + (error as Error).message);
       console.error('Error updating debt:', error);
     }
   };
@@ -102,10 +99,11 @@ const DebtsPage: React.FC = () => {
       setOpenDeleteDialog(false);
       fetchDebts(); 
     } catch (error) {
-      setError('Error deleting debt: ' + error.message);
+      setError('Error deleting debt: ' + (error as Error).message);
       console.error('Error deleting debt:', error);
     }
   };
+  
   return (
     <div>
       <Button className='!ma-2' variant="contained" color="primary" onClick={handleClickOpen}>Add New Debt</Button>
@@ -144,7 +142,7 @@ const DebtsPage: React.FC = () => {
                   <Button variant="outlined">View Payment Plan</Button>
                   <Button
                     variant="outlined"
-                    startIcon={<DeleteIcon />}onClick={() => handleDelete(debt.id)}
+                    startIcon={<DeleteIcon />}onClick={() => handleDelete(debt.id.toString())}
                     >
                       Delete
                     </Button>
@@ -158,13 +156,14 @@ const DebtsPage: React.FC = () => {
         <Dialog open={openAddEditDialog} onClose={handleCloseAddEditDialog}>
           {selectedDebt ? (
             <EditDebtForm
-              debtId={selectedDebt.id} 
+            debtId={selectedDebt.id.toString()} 
               initialDebt={selectedDebt} 
               onSubmit={handleSubmitEdit}
               onClose={handleCloseAddEditDialog}
             />
           ) : (
-            <AddDebtForm onSubmit={handleSubmitNewDebt} onClose={handleCloseAddEditDialog} />
+            <AddDebtForm onSubmit={handleSubmitNewDebt} />
+
           )}
         </Dialog>
   

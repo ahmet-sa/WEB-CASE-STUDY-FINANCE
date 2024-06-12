@@ -11,7 +11,7 @@ const PaymentPlanPage: React.FC = () => {
   const [debts, setDebts] = useState<any[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [selectedPayment, setSelectedPayment] = useState<any | null>(null);
-  const [totalPaid, setTotalPaid] = useState<number>(0); // State to hold total paid amount
+  const [, setTotalPaid] = useState<number>(0); 
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ const PaymentPlanPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // Fetch payment plan when selectedDebt changes
+
     if (selectedDebt) {
       fetchPaymentPlan(selectedDebt);
     }
@@ -56,11 +56,9 @@ const PaymentPlanPage: React.FC = () => {
     try {
       const paymentToUpdate = paymentPlan.find(payment => payment.id === paymentPlanId);
       if (paymentToUpdate) {
-        const updatedPayment = { ...paymentToUpdate, isPaid: !paymentToUpdate.isPaid }; // Toggle the status
+        const updatedPayment = { ...paymentToUpdate, isPaid: !paymentToUpdate.isPaid }; 
         await axiosInstance.put(`/finance/payment-plans/${paymentPlanId}`, updatedPayment);
-        // Update payment plan after changing payment status
         fetchPaymentPlan(selectedDebt || '');
-        // Update total paid amount
         updateTotalPaid(updatedPayment.isPaid);
       }
     } catch (error) {
@@ -86,9 +84,7 @@ const PaymentPlanPage: React.FC = () => {
       try {
         await axiosInstance.put(`/finance/payment-plans/${selectedPayment.id}`, selectedPayment);
         setIsDialogOpen(false);
-        // Update payment plan after changing payment status
         fetchPaymentPlan(selectedDebt || '');
-        // Update total paid amount
         updateTotalPaid(selectedPayment.isPaid);
       } catch (error) {
         console.error('Error updating payment:', error);

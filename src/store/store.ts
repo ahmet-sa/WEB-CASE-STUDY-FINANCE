@@ -13,8 +13,6 @@ const store = configureStore({
 
 export default store;
 
-// Store'dan alınan durum tipini belirtir
 export type RootState = ReturnType<typeof store.getState>;
 
-// Store'a gönderilecek eylem işlevinin türünü belirtir
 export type AppDispatch = typeof store.dispatch;

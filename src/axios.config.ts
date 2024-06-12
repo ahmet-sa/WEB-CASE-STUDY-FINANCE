@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-interface InternalAxiosRequestConfig<T = any> extends AxiosRequestConfig {
-  headers: any; // Change to any for now, or import AxiosRequestHeaders from 'axios'
+interface InternalAxiosRequestConfig extends AxiosRequestConfig {
+  headers: any; 
 }
 
 const axiosInstance: AxiosInstance = axios.create({

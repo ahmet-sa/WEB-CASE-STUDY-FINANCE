@@ -23,7 +23,9 @@ function App() {
       <Router>
         <div className={`app-container ${isDrawerOpen ? 'shifted' : ''}`}>
           {isAuthenticated && <Header toggleDrawer={toggleDrawer} />}
-          {isAuthenticated && <Drawer isOpen={isDrawerOpen} />}
+          {isAuthenticated && <Drawer isOpen={isDrawerOpen} onClose={function (): void {
+            throw new Error('Function not implemented.');
+          } } />}
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
