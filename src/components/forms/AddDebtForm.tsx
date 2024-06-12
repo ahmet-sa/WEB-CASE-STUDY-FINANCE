@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DialogTitle, DialogContent, DialogActions, TextField, Button } from '@material-ui/core';
+import { DialogActions, TextField, Button } from '@material-ui/core';
 import { Debt, FormErrors, PaymentPlan } from '../../types';
 import { initialDebtState, initialErrorsState } from '../../constants';
 
@@ -83,7 +83,6 @@ const AddDebtForm: React.FC<{ onSubmit: (newDebt: any) => void }> = ({ onSubmit 
           (typeof value === 'number' && value <= 0) ||
           (Array.isArray(value) && value.length === 0)
         ) {
-          console.log(key)
           return false;
         }
       }
