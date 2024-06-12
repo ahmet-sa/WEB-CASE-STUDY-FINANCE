@@ -1,5 +1,11 @@
 # Personal Debt Tracking Application
-you can clone project 
+you can clone project https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE.git
+after download you can install library
+# set up
+you can run in terminal 
+npm install vite --save-dev
+this code install library after this code 
+you can write npm run dev to run project
 
 
 # React + TypeScript + Vite
