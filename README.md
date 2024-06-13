@@ -2,18 +2,20 @@
 you can clone project https://github.com/ahmet-sa/WEB-CASE-STUDY-FINANCE.git
 after download you can install library
 # Set up
+   
 you can run in terminal 
-
+#  cd .\WEB-CASE-STUDY-FINANCE\  
+to inside
 # npm install vite --save-dev --force
-and
-# npm install vite  --force
 
 
 this code install library after this code 
-you can write npm run dev to run project
+you can write
+# npm run dev 
+project
 
 
-# React + TypeScript + Vite
+# React + TypeScript +Redux + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
