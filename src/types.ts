@@ -1,4 +1,4 @@
-// types.ts or wherever you have defined your types
+
 export interface PaymentPlan {
   paymentDate: string;
   paymentAmount: number;

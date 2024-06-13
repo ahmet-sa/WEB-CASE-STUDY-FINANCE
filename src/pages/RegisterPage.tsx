@@ -16,7 +16,7 @@ const RegisterPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,6 +25,11 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validateName(formData.name)) {
+      setError('Name must contain only letters and numbers.');
+      return;
+    }
 
     if (!validatePassword(formData.password)) {
       setError('Password must be 6-12 characters long and contain only letters and numbers.');
@@ -36,7 +41,7 @@ const RegisterPage: React.FC = () => {
       setError(null);
       const response = await axiosInstance.post('/auth/register', formData);
       console.log('Response:', response.data);
-      navigate('/login'); 
+      navigate('/login');
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         if (error.response.data && error.response.data.status === 'error' && error.response.data.data === 'User already exists') {
@@ -53,8 +58,13 @@ const RegisterPage: React.FC = () => {
     }
   };
 
+  const validateName = (name: string): boolean => {
+    const namePattern = /^[a-zA-Z0-9]+$/; // Alphanumeric characters only
+    return namePattern.test(name);
+  };
+
   const validatePassword = (password: string): boolean => {
-    const passwordPattern = /^[a-zA-Z0-9]{6,12}$/;
+    const passwordPattern = /^[a-zA-Z0-9]{6,12}$/; // 6-12 characters, alphanumeric only
     return passwordPattern.test(password);
   };
 
