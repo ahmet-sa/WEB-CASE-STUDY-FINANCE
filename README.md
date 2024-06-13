@@ -4,9 +4,9 @@ after download you can install library
 # Set up
 # please first if not have nodejs please dowload and set up nodejs
    
-you can run in terminal 
+if you are not in folder you can run in terminal 
 #  cd .\WEB-CASE-STUDY-FINANCE\  
-to inside
+to inside folder then
 # npm install vite --save-dev --force
 
 
