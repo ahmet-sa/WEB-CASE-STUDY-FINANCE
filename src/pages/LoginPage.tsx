@@ -38,7 +38,6 @@ const LoginPage: React.FC = () => {
       errors.password = 'Please fill in this field';
     }
 
-    // If there are errors, set the fieldErrors state and return early
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
