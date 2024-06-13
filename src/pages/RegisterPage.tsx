@@ -25,21 +25,29 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!validatePassword(formData.password)) {
       setError('Password must be 6-12 characters long and contain only letters and numbers.');
       return;
     }
+
     try {
       setLoading(true);
       setError(null);
-      console.log('Form submitted:', formData);
 
       const response = await axiosInstance.post('/auth/register', formData);
       console.log('Response:', response.data);
       navigate('/login'); 
-
     } catch (error: any) {
-      setError('An error occurred');
+      if (error.response && error.response.status === 400) {
+        if (error.response.data && error.response.data.status === 'error' && error.response.data.data === 'User already exists') {
+          setError('User already exists. Please use a different email.');
+        } else {
+          setError('Registration error: ' + (error.response.data.message || 'An unknown error occurred.'));
+        }
+      } else {
+        setError('An error occurred. Please try again later.');
+      }
       console.error('Registration error:', error);
     } finally {
       setLoading(false);
@@ -83,7 +91,7 @@ const RegisterPage: React.FC = () => {
           <label className="block mb-2 text-primary">
             Password:
             <input
-              className="form-input mt-1 block w-full rounded border-1 h-6 border-primary-light  "
+              className="form-input mt-1 block w-full rounded border-1 h-6 border-primary-light"
               type="password"
               name="password"
               value={formData.password}
@@ -93,16 +101,15 @@ const RegisterPage: React.FC = () => {
             />
           </label>
           <div className='w-full flex justify-center items-center'>
-          <button className="#F5F5F5  text-white w-20 bg-primary align-center  items-center  px-4 py-2 rounded-md mt-4" type="submit" disabled={loading}>
-            {loading ? 'Loading...' : 'Register'}
-          </button>
+            <button className="#F5F5F5 text-white w-20 bg-primary align-center items-center px-4 py-2 rounded-md mt-4" type="submit" disabled={loading}>
+              {loading ? 'Loading...' : 'Register'}
+            </button>
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
         <p className="mt-4 text-sm text-gray-600">
           Already have an account? <a href="/login" className="text-primary-light hover:text-primary">Login here</a>
         </p>
-        
       </div>
     </div>
   );
